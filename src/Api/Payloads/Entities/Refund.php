@@ -1,4 +1,5 @@
 <?php
+
 namespace Piggly\Pix\Api\Payloads\Entities;
 
 use DateTime;
@@ -8,7 +9,7 @@ use RuntimeException;
 
 /**
  * Refund entity to Pix entity.
- * 
+ *
  * @package \Piggly\Pix
  * @subpackage \Piggly\Pix\Api\Payloads\Entities
  * @version 2.0.0
@@ -21,350 +22,391 @@ use RuntimeException;
  */
 class Refund
 {
-	/**
-	 * Refund status as "EM_PROCESSAMENTO" . 
-	 * 
-	 * @var string
-	 * @since 2.0.0
-	 */
-	const STATUS_PROCESSING = 'EM_PROCESSAMENTO';
-	
-	/**
-	 * Refund status as "DEVOLVIDO" . 
-	 * 
-	 * @var string
-	 * @since 2.0.0
-	 */
-	const STATUS_CHARGEDBACK = 'DEVOLVIDO';
+    /**
+     * Refund status as "EM_PROCESSAMENTO" .
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    public const STATUS_PROCESSING = 'EM_PROCESSAMENTO';
 
-	/**
-	 * Refund status as "NAO_REALIZADO" . 
-	 * 
-	 * @var string
-	 * @since 2.0.0
-	 */
-	const STATUS_UNREALIZED = 'NAO_REALIZADO';
+    /**
+     * Refund status as "DEVOLVIDO" .
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    public const STATUS_CHARGEDBACK = 'DEVOLVIDO';
 
-	/**
-	 * All refund statuses available.
-	 * 
-	 * @var array<string>
-	 * @since 2.0.0
-	 */
-	const STATUSES = [
-		self::STATUS_PROCESSING,
-		self::STATUS_CHARGEDBACK,
-		self::STATUS_UNREALIZED
-	];
+    /**
+     * Refund status as "NAO_REALIZADO" .
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    public const STATUS_UNREALIZED = 'NAO_REALIZADO';
 
-	/**
-	 * ID created by client.
-	 *
-	 * @var string
-	 * @since 2.0.0
-	 */
-	protected $id;
+    /**
+     * All refund statuses available.
+     *
+     * @var array<string>
+     * @since 2.0.0
+     */
+    public const STATUSES = [
+        self::STATUS_PROCESSING,
+        self::STATUS_CHARGEDBACK,
+        self::STATUS_UNREALIZED
+    ];
 
-	/**
-	 * Return ID.
-	 *
-	 * @var string
-	 * @since 2.0.0
-	 */
-	protected $rid;
+    /**
+     * ID created by client.
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    protected $id;
 
-	/**
-	 * Return amount.
-	 *
-	 * @var float
-	 * @since 2.0.0
-	 */
-	protected $amount;
+    /**
+     * Return ID.
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    protected $rid;
 
-	/**
-	 * Return status.
-	 *
-	 * @var string
-	 * @since 2.0.0
-	 */
-	protected $status;
+    /**
+     * Return amount.
+     *
+     * @var float
+     * @since 2.0.0
+     */
+    protected $amount;
 
-	/**
-	 * Return reason.
-	 *
-	 * @var string
-	 * @since 2.0.0
-	 */
-	protected $reason;
+    /**
+     * Return status.
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    protected $status;
 
-	/**
-	 * Date when return was requested.
-	 *
-	 * @var DateTime
-	 * @since 2.0.0
-	 */
-	protected $requestedAt;
+    /**
+     * Return reason.
+     *
+     * @var string
+     * @since 2.0.0
+     */
+    protected $reason;
 
-	/**
-	 * Date when return was paid.
-	 *
-	 * @var DateTime
-	 * @since 2.0.0
-	 */
-	protected $paidAt;
+    /**
+     * Date when return was requested.
+     *
+     * @var DateTime
+     * @since 2.0.0
+     */
+    protected $requestedAt;
 
-	/**
-	 * Get date when return was paid.
-	 *
-	 * @since 2.0.0
-	 * @return DateTime|null
-	 */
-	public function getPaidAt () : ?DateTime
-	{ return $this->paidAt; }
+    /**
+     * Date when return was paid.
+     *
+     * @var DateTime
+     * @since 2.0.0
+     */
+    protected $paidAt;
 
-	/**
-	 * Set date when return was paid.
-	 *
-	 * @param DateTime|string $paidAt Date when return was paid.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setPaidAt ( $paidAt )
-	{ $this->paidAt = $paidAt instanceof DateTime ? $paidAt : new DateTime($paidAt); return $this; }
+    /**
+     * Get date when return was paid.
+     *
+     * @since 2.0.0
+     * @return DateTime|null
+     */
+    public function getPaidAt(): ?DateTime
+    {
+        return $this->paidAt;
+    }
 
-	/**
-	 * Get date when return was requested.
-	 *
-	 * @since 2.0.0
-	 * @return DateTime|null
-	 */
-	public function getRequestedAt () : ?DateTime
-	{ return $this->requestedAt; }
+    /**
+     * Set date when return was paid.
+     *
+     * @param DateTime|string $paidAt Date when return was paid.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setPaidAt($paidAt)
+    {
+        $this->paidAt = $paidAt instanceof DateTime ? $paidAt : new DateTime($paidAt);
+        return $this;
+    }
 
-	/**
-	 * Set date when return was requested.
-	 *
-	 * @param DateTime|string $requestedAt Date when return was requested.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setRequestedAt ( $requestedAt )
-	{ $this->requestedAt = $requestedAt instanceof DateTime ? $requestedAt : new DateTime($requestedAt); return $this; }
+    /**
+     * Get date when return was requested.
+     *
+     * @since 2.0.0
+     * @return DateTime|null
+     */
+    public function getRequestedAt(): ?DateTime
+    {
+        return $this->requestedAt;
+    }
 
-	/**
-	 * Get return reason.
-	 *
-	 * @since 2.0.0
-	 * @return string|null
-	 */
-	public function getReason () : ?string
-	{ return $this->reason; }
+    /**
+     * Set date when return was requested.
+     *
+     * @param DateTime|string $requestedAt Date when return was requested.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setRequestedAt($requestedAt)
+    {
+        $this->requestedAt = $requestedAt instanceof DateTime ? $requestedAt : new DateTime($requestedAt);
+        return $this;
+    }
 
-	/**
-	 * Set return reason.
-	 *
-	 * @param string $reason Return reason.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setReason ( string $reason )
-	{ $this->reason = $reason; return $this; }
+    /**
+     * Get return reason.
+     *
+     * @since 2.0.0
+     * @return string|null
+     */
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
 
-	/**
-	 * Get return status.
-	 *
-	 * @since 2.0.0
-	 * @return string
-	 */
-	public function getStatus () : string
-	{ return $this->status; }
+    /**
+     * Set return reason.
+     *
+     * @param string $reason Return reason.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setReason(string $reason)
+    {
+        $this->reason = $reason;
+        return $this;
+    }
 
-	/**
-	 * Set return status.
-	 *
-	 * @param string $status Return status.
-	 * @since 2.0.0
-	 * @return self
-	 * @throws InvalidFieldException
-	 */
-	public function setStatus ( string $status )
-	{ 
-		try
-		{ static::validateStatus($status); }
-		catch ( Exception $e )
-		{ throw new InvalidFieldException('Devolução.Status', $status, $e->getMessage()); }
-		
-		$this->status = $status; 
-		return $this; 
-	}
+    /**
+     * Get return status.
+     *
+     * @since 2.0.0
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
 
-	/**
-	 * Get return amount.
-	 *
-	 * @since 2.0.0
-	 * @return float
-	 */
-	public function getAmount () : float
-	{ return $this->amount; }
+    /**
+     * Set return status.
+     *
+     * @param string $status Return status.
+     * @since 2.0.0
+     * @return self
+     * @throws InvalidFieldException
+     */
+    public function setStatus(string $status)
+    {
+        try {
+            static::validateStatus($status);
+        } catch (Exception $e) {
+            throw new InvalidFieldException('Devolução.Status', $status, $e->getMessage());
+        }
 
-	/**
-	 * Set return amount.
-	 *
-	 * @param float|string $amount Return amount.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setAmount ( $amount )
-	{ $this->amount = \is_float($amount) ? $amount : \floatval($amount); return $this; }
+        $this->status = $status;
+        return $this;
+    }
 
-	/**
-	 * Get return ID.
-	 *
-	 * @since 2.0.0
-	 * @return string
-	 */
-	public function getRid () : string
-	{ return $this->rid; }
+    /**
+     * Get return amount.
+     *
+     * @since 2.0.0
+     * @return float
+     */
+    public function getAmount(): float
+    {
+        return $this->amount;
+    }
 
-	/**
-	 * Set return ID.
-	 *
-	 * @param string $rid Return ID.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setRid ( string $rid )
-	{ $this->rid = $rid; return $this; }
+    /**
+     * Set return amount.
+     *
+     * @param float|string $amount Return amount.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = \is_float($amount) ? $amount : \floatval($amount);
+        return $this;
+    }
 
-	/**
-	 * Get iD created by client.
-	 *
-	 * @since 2.0.0
-	 * @return string
-	 */
-	public function getId () : string
-	{ return $this->id; }
+    /**
+     * Get return ID.
+     *
+     * @since 2.0.0
+     * @return string
+     */
+    public function getRid(): string
+    {
+        return $this->rid;
+    }
 
-	/**
-	 * Set iD created by client.
-	 *
-	 * @param string $id ID created by client.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setId ( string $id )
-	{ $this->id = $id; return $this; }
+    /**
+     * Set return ID.
+     *
+     * @param string $rid Return ID.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setRid(string $rid)
+    {
+        $this->rid = $rid;
+        return $this;
+    }
 
-	/**
-	 * Export this object to an array.
-	 * 
-	 * @since 2.0.0
-	 * @return array
-	 */
-	public function export () : array
-	{
-		$array = [];
-		
-		if ( !empty($this->id) )
-		{ $array['id'] = $this->id; }
+    /**
+     * Get iD created by client.
+     *
+     * @since 2.0.0
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
-		if ( !empty($this->rid) )
-		{ $array['rtrId'] = $this->rid; }
+    /**
+     * Set iD created by client.
+     *
+     * @param string $id ID created by client.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setId(string $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 
-		if ( !empty($this->amount) )
-		{ $array['valor'] = \number_format($this->amount, 2, '.', ''); }
+    /**
+     * Export this object to an array.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    public function export(): array
+    {
+        $array = [];
 
-		if ( !empty($this->status) )
-		{ $array['status'] = $this->status; }
+        if (!empty($this->id)) {
+            $array['id'] = $this->id;
+        }
 
-		if ( !empty($this->reason) )
-		{ $array['motivo'] = $this->reason; }
+        if (!empty($this->rid)) {
+            $array['rtrId'] = $this->rid;
+        }
 
-		if ( !empty($this->requestedAt) || !empty($this->paidAt) )
-		{ 
-			$array['horario'] = []; 
+        if (!empty($this->amount)) {
+            $array['valor'] = \number_format($this->amount, 2, '.', '');
+        }
 
-			if ( !empty($this->requestedAt) )
-			{ $array['horario']['solicitacao'] = $this->requestedAt->format(DateTime::RFC3339); }
+        if (!empty($this->status)) {
+            $array['status'] = $this->status;
+        }
 
-			if ( !empty($this->paidAt) )
-			{ $array['horario']['liquidacao'] = $this->paidAt->format(DateTime::RFC3339); }
-		}
+        if (!empty($this->reason)) {
+            $array['motivo'] = $this->reason;
+        }
 
-		return $array;
-	}
+        if (!empty($this->requestedAt) || !empty($this->paidAt)) {
+            $array['horario'] = [];
 
-	/**
-	 * Import data to array.
-	 * 
-	 * @param array $data
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function import ( array $data )
-	{
-		$importable = [
-			'id' => 'setId',
-			'rtrId' => 'setRid',
-			'valor' => 'setAmount',
-			'status' => 'setStatus',
-			'motivo' => 'setReason'
-		];
+            if (!empty($this->requestedAt)) {
+                $array['horario']['solicitacao'] = $this->requestedAt->format(DateTime::RFC3339);
+            }
 
-		foreach ( $importable as $field => $method )
-		{
-			if ( isset($data[$field]) )
-			{ $this->{$method}($data[$field]); }
-		}
+            if (!empty($this->paidAt)) {
+                $array['horario']['liquidacao'] = $this->paidAt->format(DateTime::RFC3339);
+            }
+        }
 
-		if ( isset($data['horario']) )
-		{
-			$importable = [
-				'solicitacao' => 'setRequestedAt',
-				'liquidacao' => 'setPaidAt'
-			];
+        return $array;
+    }
 
-			foreach ( $importable as $field => $method )
-			{
-				if ( isset($data['horario'][$field]) )
-				{ $this->{$method}($data['horario'][$field]); }
-			}
-		}
+    /**
+     * Import data to array.
+     *
+     * @param array $data
+     * @since 2.0.0
+     * @return self
+     */
+    public function import(array $data)
+    {
+        $importable = [
+            'id' => 'setId',
+            'rtrId' => 'setRid',
+            'valor' => 'setAmount',
+            'status' => 'setStatus',
+            'motivo' => 'setReason'
+        ];
 
-		return $this;
-	}
+        foreach ($importable as $field => $method) {
+            if (isset($data[$field])) {
+                $this->{$method}($data[$field]);
+            }
+        }
 
-	/**
-	 * Throw an exception if $status is a invalid status.
-	 *
-	 * @param string $status
-	 * @since 2.0.0
-	 * @return void
-	 * @throws RuntimeException If is a invalid status.
-	 */
-	public static function validateStatus ( string $status )
-	{
-		if ( \in_array($status, static::STATUSES, true) === false )
-		{ throw new RuntimeException(\sprintf('O status deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES))); }
-	}
+        if (isset($data['horario'])) {
+            $importable = [
+                'solicitacao' => 'setRequestedAt',
+                'liquidacao' => 'setPaidAt'
+            ];
 
-	/**
-	 * Is $expected equal to $actual.
-	 *
-	 * @param string $expected
-	 * @param string $actual
-	 * @since 2.0.0
-	 * @return boolean
-	 * @throws RuntimeException If some is a invalid status.
-	 */
-	public static function isStatus ( string $expected, string $actual ) : bool
-	{ 
-		if ( \in_array($expected, static::STATUSES, true) === false )
-		{ throw new RuntimeException(\sprintf('O status esperado deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES))); }
-		
-		if ( \in_array($actual, static::STATUSES, true) === false )
-		{ throw new RuntimeException(\sprintf('O status atual deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES))); }
-		
-		return $expected === $actual; 
-	}
+            foreach ($importable as $field => $method) {
+                if (isset($data['horario'][$field])) {
+                    $this->{$method}($data['horario'][$field]);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Throw an exception if $status is a invalid status.
+     *
+     * @param string $status
+     * @since 2.0.0
+     * @return void
+     * @throws RuntimeException If is a invalid status.
+     */
+    public static function validateStatus(string $status)
+    {
+        if (\in_array($status, static::STATUSES, true) === false) {
+            throw new RuntimeException(\sprintf('O status deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES)));
+        }
+    }
+
+    /**
+     * Is $expected equal to $actual.
+     *
+     * @param string $expected
+     * @param string $actual
+     * @since 2.0.0
+     * @return boolean
+     * @throws RuntimeException If some is a invalid status.
+     */
+    public static function isStatus(string $expected, string $actual): bool
+    {
+        if (\in_array($expected, static::STATUSES, true) === false) {
+            throw new RuntimeException(\sprintf('O status esperado deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES)));
+        }
+
+        if (\in_array($actual, static::STATUSES, true) === false) {
+            throw new RuntimeException(\sprintf('O status atual deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES)));
+        }
+
+        return $expected === $actual;
+    }
 }
