@@ -1,6 +1,6 @@
 {
-    "name": "piggly/php-pix",
-    "description": "Uma biblioteca para preparar e gerar o código Pix do Banco Central do Brasil.",
+    "name": "jrodella/php-pix",
+    "description": "Uma biblioteca para preparar e gerar o código Pix do Banco Central do Brasil. (Isso é uma fork de: piggly/php-pix)",
     "keywords": [
         "piggly",
         "pix",
@@ -10,7 +10,7 @@
         "payment"
     ],
     "type": "library",
-    "homepage": "https://github.com/piggly-dev/php-pix",
+    "homepage": "https://github.com/jrodella/php-pix",
     "autoload": {
         "psr-4": {
             "Piggly\\Pix\\": "src"
@@ -22,7 +22,7 @@
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-gd": "*",
-        "chillerlan/php-qrcode": "^3.3"
+        "chillerlan/php-qrcode": "^3.3 || ^4"
     },
     "require-dev": {
         "php": "^7.3 || ^8.0",

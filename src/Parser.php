@@ -1,4 +1,5 @@
 <?php
+
 namespace Piggly\Pix;
 
 use Piggly\Pix\Exceptions\CannotParseKeyTypeException;
@@ -7,7 +8,7 @@ use Piggly\Pix\Exceptions\InvalidPixKeyTypeException;
 
 /**
  * The Pix Parser class.
- * This is used to parse and format data 
+ * This is used to parse and format data
  * following patterns and standards of a pix.
  *
  * @package \Piggly\Pix
@@ -22,341 +23,355 @@ use Piggly\Pix\Exceptions\InvalidPixKeyTypeException;
  */
 class Parser
 {
-	/** @var string KEY_TYPE_RANDOM Random key. */
-	const KEY_TYPE_RANDOM = 'random';
-	/** @var string KEY_TYPE_DOCUMENT Document key. */
-	const KEY_TYPE_DOCUMENT = 'document';
-	/** @var string KEY_TYPE_EMAIL Email key. */
-	const KEY_TYPE_EMAIL = 'email';
-	/** @var string KEY_TYPE_PHONE Phone key. */
-	const KEY_TYPE_PHONE = 'phone';
+    /** @var string KEY_TYPE_RANDOM Random key. */
+    public const KEY_TYPE_RANDOM = 'random';
+    /** @var string KEY_TYPE_DOCUMENT Document key. */
+    public const KEY_TYPE_DOCUMENT = 'document';
+    /** @var string KEY_TYPE_EMAIL Email key. */
+    public const KEY_TYPE_EMAIL = 'email';
+    /** @var string KEY_TYPE_PHONE Phone key. */
+    public const KEY_TYPE_PHONE = 'phone';
 
-	/**
-	 * Return the alias for key value.
-	 * 
-	 * @since 1.0.0
-	 * @param string $key
-	 * @return string
-	 */
-	public static function getAlias ( string $key ) : string 
-	{
-		switch ( $key )
-		{
-			case self::KEY_TYPE_RANDOM:
-				return 'Chave Aleatória';
-			case self::KEY_TYPE_DOCUMENT:
-				return 'CPF/CNPJ';
-			case self::KEY_TYPE_EMAIL:
-				return 'E-mail';
-			case self::KEY_TYPE_PHONE:
-				return 'Telefone';
-		}
+    /**
+     * Return the alias for key value.
+     *
+     * @since 1.0.0
+     * @param string $key
+     * @return string
+     */
+    public static function getAlias(string $key): string
+    {
+        switch ($key) {
+            case self::KEY_TYPE_RANDOM:
+                return 'Chave Aleatória';
+            case self::KEY_TYPE_DOCUMENT:
+                return 'CPF/CNPJ';
+            case self::KEY_TYPE_EMAIL:
+                return 'E-mail';
+            case self::KEY_TYPE_PHONE:
+                return 'Telefone';
+        }
 
-		return 'Chave Desconhecida';
-	}
+        return 'Chave Desconhecida';
+    }
 
-	/**
-	 * Validate a $value based in the respective pix $key.
-	 * 
-	 * @since 1.0.0
-	 * @since 1.2.0 Added a custom exception error
-	 * @since 2.0.0 Changed parameters
-	 * @param string $type Pix key type.
-	 * @param string $value Pix key value.
-	 * @throws InvalidPixKeyTypeException When pix key type is invalid.
-	 * @throws InvalidPixKeyException When pix key is invalid base in key type.
-	 */
-	public static function validate ( string $type, string $value )
-	{
-		if ( !in_array($type, [self::KEY_TYPE_RANDOM, self::KEY_TYPE_DOCUMENT, self::KEY_TYPE_EMAIL, self::KEY_TYPE_PHONE]) )
-		{ throw new InvalidPixKeyTypeException($type); }
+    /**
+     * Validate a $value based in the respective pix $key.
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Added a custom exception error
+     * @since 2.0.0 Changed parameters
+     * @param string $type Pix key type.
+     * @param string $value Pix key value.
+     * @throws InvalidPixKeyTypeException When pix key type is invalid.
+     * @throws InvalidPixKeyException When pix key is invalid base in key type.
+     */
+    public static function validate(string $type, string $value)
+    {
+        if (!in_array($type, [self::KEY_TYPE_RANDOM, self::KEY_TYPE_DOCUMENT, self::KEY_TYPE_EMAIL, self::KEY_TYPE_PHONE])) {
+            throw new InvalidPixKeyTypeException($type);
+        }
 
-		$validate = false;
+        $validate = false;
 
-		switch ( $type )
-		{
-			case self::KEY_TYPE_RANDOM:
-				$validate = self::validateRandom($value);
-				break;
-			case self::KEY_TYPE_DOCUMENT:
-				$validate = self::validateDocument($value);
-				break;
-			case self::KEY_TYPE_EMAIL:
-				$validate = self::validateEmail($value);
-				break;
-			case self::KEY_TYPE_PHONE:
-				$validate = self::validatePhone($value);
-				break;
-		}
+        switch ($type) {
+            case self::KEY_TYPE_RANDOM:
+                $validate = self::validateRandom($value);
+                break;
+            case self::KEY_TYPE_DOCUMENT:
+                $validate = self::validateDocument($value);
+                break;
+            case self::KEY_TYPE_EMAIL:
+                $validate = self::validateEmail($value);
+                break;
+            case self::KEY_TYPE_PHONE:
+                $validate = self::validatePhone($value);
+                break;
+        }
 
-		if ( !$validate )
-		{ throw new InvalidPixKeyException($type, $value); }
-	}
+        if (!$validate) {
+            throw new InvalidPixKeyException($type, $value);
+        }
+    }
 
-	/**
-	 * Validates the random key value.
-	 * 
-	 * @since 1.0.0
-	 * @param string $random Pix key value.
-	 * @return bool
-	 */
-	public static function validateRandom ( string $random ) : bool
-	{
-		if ( !preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $random) )
-		{ return false; }
+    /**
+     * Validates the random key value.
+     *
+     * @since 1.0.0
+     * @param string $random Pix key value.
+     * @return bool
+     */
+    public static function validateRandom(string $random): bool
+    {
+        if (!preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $random)) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Validates the document key value.
-	 * 
-	 * @since 1.0.0
-	 * @param string $document Pix key value.
-	 * @return bool
-	 */
-	public static function validateDocument ( string $document ) : bool
-	{
-		$parsed = self::parseDocument($document);
-		
-		if ( strlen($parsed) === 11 )
-		{ return self::validateCpf($parsed); }
-		else if ( strlen($parsed) === 14 )
-		{ return self::validateCnpj($parsed); }
+    /**
+     * Validates the document key value.
+     *
+     * @since 1.0.0
+     * @param string $document Pix key value.
+     * @return bool
+     */
+    public static function validateDocument(string $document): bool
+    {
+        $parsed = self::parseDocument($document);
 
-		return false;
-	}
+        if (strlen($parsed) === 11) {
+            return self::validateCpf($parsed);
+        } elseif (strlen($parsed) === 14) {
+            return self::validateCnpj($parsed);
+        }
 
-	/**
-	 * Validates a CPF number.
-	 * 
-	 * @since 1.0.0
-	 * @since 1.2.0 Public function
-	 * @param string $document String with only numbers.
-	 * @return bool
-	 */
-	public static function validateCpf ( string $document ) : bool
-	{
-		// Only numbers
-		if ( !preg_match('/^[\d]{11}$/', $document) ) 
-		{ return false; }
-	
-		// CPF Checksum
-		for ($t = 9; $t < 11; $t++) 
-		{
-			for ( $d = 0, $c = 0; $c < $t; $c++ ) 
-			{ $d += $document[$c] * (($t + 1) - $c); }
+        return false;
+    }
 
-			$d = ((10 * $d) % 11) % 10;
+    /**
+     * Validates a CPF number.
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Public function
+     * @param string $document String with only numbers.
+     * @return bool
+     */
+    public static function validateCpf(string $document): bool
+    {
+        // Only numbers
+        if (!preg_match('/^[\d]{11}$/', $document)) {
+            return false;
+        }
 
-			if ( $document[$c] != $d ) 
-			{ return false; }
-	  	}
+        // CPF Checksum
+        for ($t = 9; $t < 11; $t++) {
+            for ($d = 0, $c = 0; $c < $t; $c++) {
+                $d += $document[$c] * (($t + 1) - $c);
+            }
 
-		return true;
-	}
+            $d = ((10 * $d) % 11) % 10;
 
-	/**
-	 * Validates a CNPJ number.
-	 * 
-	 * @since 1.0.0
-	 * @since 1.2.0 Public function
-	 * @param string $document String with only numbers.
-	 * @return bool
-	 */
-	public static function validateCnpj ( string $document ) : bool
-	{
-		// Only numbers
-		if ( !preg_match('/^[\d]{14}$/', $document) ) 
-		{ return false; }
-	
-		// CNPJ first Checksum
-		for ( $i = 0, $j = 5, $sum = 0; $i < 12; $i++ )
-		{
-			$sum += $document[$i] * $j;
-			$j = ($j == 2) ? 9 : $j - 1;
-		}
+            if ($document[$c] != $d) {
+                return false;
+            }
+        }
 
-		$result = $sum % 11;
+        return true;
+    }
 
-		if ( $document[12] !== (string)( $result < 2 ? 0 : 11 - $result ) )
-		{ return false; }
-	
-		// CNPJ second Checksum
-		for ($i = 0, $j = 6, $sum = 0; $i < 13; $i++)
-		{
-			$sum += $document[$i] * $j;
-			$j = ($j == 2) ? 9 : $j - 1;
-		}
+    /**
+     * Validates a CNPJ number.
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Public function
+     * @param string $document String with only numbers.
+     * @return bool
+     */
+    public static function validateCnpj(string $document): bool
+    {
+        // Only numbers
+        if (!preg_match('/^[\d]{14}$/', $document)) {
+            return false;
+        }
 
-		$result = $sum % 11;
+        // CNPJ first Checksum
+        for ($i = 0, $j = 5, $sum = 0; $i < 12; $i++) {
+            $sum += $document[$i] * $j;
+            $j = ($j == 2) ? 9 : $j - 1;
+        }
 
-		if ( $document[13] !== (string)( $result < 2 ? 0 : 11 - $result ) )
-		{ return false; }
+        $result = $sum % 11;
 
-		return true;
-	}
+        if ($document[12] !== (string)($result < 2 ? 0 : 11 - $result)) {
+            return false;
+        }
 
-	/**
-	 * Validates the email key value.
-	 * 
-	 * @since 1.0.0
-	 * @param string $email Pix key value.
-	 * @return bool
-	 */
-	public static function validateEmail ( string $email ) : bool
-	{
-		$email = str_replace(' ', '@', $email);
-		return filter_var($email, FILTER_VALIDATE_EMAIL);
-	}
+        // CNPJ second Checksum
+        for ($i = 0, $j = 6, $sum = 0; $i < 13; $i++) {
+            $sum += $document[$i] * $j;
+            $j = ($j == 2) ? 9 : $j - 1;
+        }
 
-	/**
-	 * Validates the phone key value.
-	 * 
-	 * @since 1.0.0
-	 * @param string $phone Pix key value.
-	 * @return bool
-	 */
-	public static function validatePhone ( string $phone ) : bool
-	{
-		$parsed = self::parsePhone($phone);
+        $result = $sum % 11;
 
-		if ( !preg_match('/^(\+55)?(\d{10,11})$/', $parsed) )
-		{ return false; }
+        if ($document[13] !== (string)($result < 2 ? 0 : 11 - $result)) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Parse a $value based in the respective pix $key.
-	 * 
-	 * @since 1.0.0
-	 * @since 1.2.0 Custom exception error
-	 * @since 2.0.0 Changed parameters
-	 * @param string $type Pix key type.
-	 * @param string $key Pix key value value.
-	 * @return string
-	 * @throws InvalidPixKeyTypeException pix key type is invalid
-	 */
-	public static function parse ( string $type, string $key ) : string
-	{
-		switch ( $type )
-		{
-			case self::KEY_TYPE_RANDOM:
-				return $key;
-			case self::KEY_TYPE_DOCUMENT:
-				return self::parseDocument($key);
-			case self::KEY_TYPE_EMAIL:
-				return self::parseEmail($key);
-			case self::KEY_TYPE_PHONE:
-				return self::parsePhone($key);
-		}
+    /**
+     * Validates the email key value.
+     *
+     * @since 1.0.0
+     * @param string $email Pix key value.
+     * @return bool
+     */
+    public static function validateEmail(string $email): bool
+    {
+        $email = str_replace(' ', '@', $email);
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
 
-		throw new InvalidPixKeyTypeException($type);
-	}
+    /**
+     * Validates the phone key value.
+     *
+     * @since 1.0.0
+     * @param string $phone Pix key value.
+     * @return bool
+     */
+    public static function validatePhone(string $phone): bool
+    {
+        $parsed = self::parsePhone($phone);
 
-	/**
-	 * Parse any document string to a correct document format.
-	 * 
-	 * @since 1.0.0
-	 * @param string $document
-	 * @return string
-	 */
-	public static function parseDocument ( string $document ) : string
-	{ return preg_replace('/[^\d]+/', '', $document); }
+        if (!preg_match('/^(\+55)?(\d{10,11})$/', $parsed)) {
+            return false;
+        }
 
-	/**
-	 * Parse any email string to a correct email format.
-	 * 
-	 * @since 1.0.0
-	 * @param string $email
-	 * @param string $replaceAt replaces the @ character to space
-	 * @return string
-	 */
-	public static function parseEmail ( string $email, bool $replaceAt = false ) : string
-	{ 
-		if ( !$replaceAt )
-		{ return $email; }
+        return true;
+    }
 
-		return str_replace('@', ' ', $email); 
-	}
+    /**
+     * Parse a $value based in the respective pix $key.
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Custom exception error
+     * @since 2.0.0 Changed parameters
+     * @param string $type Pix key type.
+     * @param string $key Pix key value value.
+     * @return string
+     * @throws InvalidPixKeyTypeException pix key type is invalid
+     */
+    public static function parse(string $type, string $key): string
+    {
+        switch ($type) {
+            case self::KEY_TYPE_RANDOM:
+                return $key;
+            case self::KEY_TYPE_DOCUMENT:
+                return self::parseDocument($key);
+            case self::KEY_TYPE_EMAIL:
+                return self::parseEmail($key);
+            case self::KEY_TYPE_PHONE:
+                return self::parsePhone($key);
+        }
 
-	/**
-	 * Parse any phone string to a correct phone format.
-	 * 
-	 * @since 1.0.0
-	 * @param string $phone
-	 * @return string
-	 */
-	public static function parsePhone ( string $phone ) : string
-	{
-		$phone = str_replace('+55', '', $phone);
-		$phone = preg_replace('/[^\d]+/', '', $phone);
-		return '+55'.$phone;
-	}
+        throw new InvalidPixKeyTypeException($type);
+    }
 
-	/**
-	 * Parse transaction id string to valid characters.
-	 * 
-	 * @since 1.1.2
-	 * @since 1.2.6 Return *** when $tid is equal to ***.
-	 * @param string $phone
-	 * @return string
-	 */
-	public static function parseTid ( string $tid = null )
-	{
-		if ( empty($tid) || $tid === '***' )
-		{ return '***'; }
+    /**
+     * Parse any document string to a correct document format.
+     *
+     * @since 1.0.0
+     * @param string $document
+     * @return string
+     */
+    public static function parseDocument(string $document): string
+    {
+        return preg_replace('/[^\d]+/', '', $document);
+    }
 
-		return preg_replace('/[^A-Za-z0-9]+/', '', $tid);
-	}
+    /**
+     * Parse any email string to a correct email format.
+     *
+     * @since 1.0.0
+     * @param string $email
+     * @param string $replaceAt replaces the @ character to space
+     * @return string
+     */
+    public static function parseEmail(string $email, bool $replaceAt = false): string
+    {
+        if (!$replaceAt) {
+            return $email;
+        }
 
-	/**
-	 * Return the key type based in the pix key.
-	 * 
-	 * @since 1.1.0
-	 * @since 1.2.0 Custom exception error.
-	 * @param string $pixKey
-	 * @return string
-	 * @throws CannotParseKeyTypeException Cannot parse type of pix key
-	 */
-	public static function getKeyType ( string $pixKey ) : string
-	{
-		// Valid uuid-v4
-		if ( self::validateRandom($pixKey) )
-		{ return self::KEY_TYPE_RANDOM; }
+        return str_replace('@', ' ', $email);
+    }
 
-		// Valid e-mail
-		if ( self::validateEmail($pixKey) )
-		{ return self::KEY_TYPE_EMAIL; }
+    /**
+     * Parse any phone string to a correct phone format.
+     *
+     * @since 1.0.0
+     * @param string $phone
+     * @return string
+     */
+    public static function parsePhone(string $phone): string
+    {
+        $phone = str_replace('+55', '', $phone);
+        $phone = preg_replace('/[^\d]+/', '', $phone);
+        return '+55'.$phone;
+    }
 
-		// Valid CPF or CNPJ
-		if ( self::validateCpf($pixKey) || self::validateCnpj($pixKey) )
-		{ return self::KEY_TYPE_DOCUMENT; }
+    /**
+     * Parse transaction id string to valid characters.
+     *
+     * @since 1.1.2
+     * @since 1.2.6 Return *** when $tid is equal to ***.
+     * @param string $phone
+     * @return string
+     */
+    public static function parseTid(string $tid = null)
+    {
+        if (empty($tid) || $tid === '***') {
+            return '***';
+        }
 
-		// Any type of phone
-		if ( self::validatePhone($pixKey) )
-		{ return self::KEY_TYPE_PHONE; }
+        return preg_replace('/[^A-Za-z0-9]+/', '', $tid);
+    }
 
-		throw new CannotParseKeyTypeException($pixKey);
-	}
+    /**
+     * Return the key type based in the pix key.
+     *
+     * @since 1.1.0
+     * @since 1.2.0 Custom exception error.
+     * @param string $pixKey
+     * @return string
+     * @throws CannotParseKeyTypeException Cannot parse type of pix key
+     */
+    public static function getKeyType(string $pixKey): string
+    {
+        // Valid uuid-v4
+        if (self::validateRandom($pixKey)) {
+            return self::KEY_TYPE_RANDOM;
+        }
 
-	/**
-	 * Return a random string with 25 characters which contains
-	 * A-Z, a-z and 0-9.
-	 * 
-	 * @since 1.2.0
-	 * @return string
-	 */
-	public static function getRandom () : string
-	{
-		$chars  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		$length = strlen($chars);
-		$random = '';
+        // Valid e-mail
+        if (self::validateEmail($pixKey)) {
+            return self::KEY_TYPE_EMAIL;
+        }
 
-		for ($i = 0; $i < 25; $i++) 
-		{ $random .= $chars[rand(0, $length - 1)]; }
+        // Valid CPF or CNPJ
+        if (self::validateCpf($pixKey) || self::validateCnpj($pixKey)) {
+            return self::KEY_TYPE_DOCUMENT;
+        }
 
-		return $random;
-	}
+        // Any type of phone
+        if (self::validatePhone($pixKey)) {
+            return self::KEY_TYPE_PHONE;
+        }
+
+        throw new CannotParseKeyTypeException($pixKey);
+    }
+
+    /**
+     * Return a random string with 25 characters which contains
+     * A-Z, a-z and 0-9.
+     *
+     * @since 1.2.0
+     * @return string
+     */
+    public static function getRandom(): string
+    {
+        $chars  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $length = strlen($chars);
+        $random = '';
+
+        for ($i = 0; $i < 25; $i++) {
+            $random .= $chars[rand(0, $length - 1)];
+        }
+
+        return $random;
+    }
 }

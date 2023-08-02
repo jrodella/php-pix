@@ -1,9 +1,10 @@
 <?php
+
 namespace Piggly\Pix\Api\Payloads\Entities;
 
 /**
  * Amount entity to Cob payload.
- * 
+ *
  * @package \Piggly\Pix
  * @subpackage \Piggly\Pix\Api\Payloads\Entities
  * @version 2.0.0
@@ -16,147 +17,196 @@ namespace Piggly\Pix\Api\Payloads\Entities;
  */
 class Amount
 {
-	/**
-	 * Original amount.
-	 * 
-	 * @since 2.0.0
-	 * @var float
-	 */
-	protected $original;
+    /**
+     * Original amount.
+     *
+     * @since 2.0.0
+     * @var float
+     */
+    protected $original;
 
-	/**
-	 * Final amount.
-	 * 
-	 * @since 2.0.0
-	 * @var float
-	 */
-	protected $final;
+    /**
+     * Final amount.
+     *
+     * @since 2.0.0
+     * @var float
+     */
+    protected $final;
 
-	/**
-	 * Modalities to amount.
-	 * 
-	 * @since 2.0.0
-	 * @var array<DueAmountModality>
-	 */
-	protected $modalities = [];
-	
-	/**
-	 * Get original amount.
-	 *
-	 * @since 2.0.0
-	 * @return float|null
-	 */
-	public function getOriginal () : ?float
-	{ return $this->original; }
+    /**
+     * Change modality.
+     *
+     * @since 2.0.0
+     * @var bool
+     */
+    protected $changeModality;
 
-	/**
-	 * Set original amount.
-	 *
-	 * @param float|string $original Original amount.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setOriginal ( $original )
-	{ $this->original = \is_float($original) ? $original : \floatval($original); return $this; }
-	
-	/**
-	 * Get final amount.
-	 *
-	 * @since 2.0.0
-	 * @return float|null
-	 */
-	public function getFinal () : ?float
-	{ return $this->final; }
+    /**
+     * Modalities to amount.
+     *
+     * @since 2.0.0
+     * @var array<DueAmountModality>
+     */
+    protected $modalities = [];
 
-	/**
-	 * Set final amount.
-	 *
-	 * @param float|string $final Original amount.
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function setFinal ( $final )
-	{ $this->final = \is_float($final) ? $final : \floatval($final); return $this; }
+    /**
+     * Get original amount.
+     *
+     * @since 2.0.0
+     * @return float|null
+     */
+    public function getOriginal(): ?float
+    {
+        return $this->original;
+    }
 
-	/**
-	 * Add modality to pix transacion.
-	 *
-	 * @param DueAmountModality $modality
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function addModality ( DueAmountModality $modality )
-	{ $this->modalities[$modality->getModality()] = $modality; return $this; }
+    /**
+     * Set original amount.
+     *
+     * @param float|string $original Original amount.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setOriginal($original)
+    {
+        $this->original = \is_float($original) ? $original : \floatval($original);
+        return $this;
+    }
 
-	/**
-	 * Get modality by modality unique id.
-	 *
-	 * @param string $modality
-	 * @since 2.0.0
-	 * @return DueAmountModality|null
-	 */
-	public function getModality ( string $modality ) : ?DueAmountModality
-	{ return $this->modalities[$modality] ?? null; }
+    /**
+     * Get final amount.
+     *
+     * @since 2.0.0
+     * @return float|null
+     */
+    public function getFinal(): ?float
+    {
+        return $this->final;
+    }
 
-	/**
-	 * Get all modalities associated to pix transaction.
-	 *
-	 * @since 2.0.0
-	 * @return array
-	 */
-	public function getModalities () : array
-	{ return $this->modalities; }
+    /**
+     * Set final amount.
+     *
+     * @param float|string $final Original amount.
+     * @since 2.0.0
+     * @return self
+     */
+    public function setFinal($final)
+    {
+        $this->final = \is_float($final) ? $final : \floatval($final);
+        return $this;
+    }
 
-	/**
-	 * Export this object to an array.
-	 * 
-	 * @since 2.0.0
-	 * @return array
-	 */
-	public function export () : array
-	{
-		$array = [
-			'original' => \number_format($this->original, 2, '.', '')
-		];
+    /**
+     * Add modality to pix transacion.
+     *
+     * @param DueAmountModality $modality
+     * @since 2.0.0
+     * @return self
+     */
+    public function addModality(DueAmountModality $modality)
+    {
+        $this->modalities[$modality->getModality()] = $modality;
+        return $this;
+    }
 
-		if ( !empty($this->final) )
-		{ $array['final'] = \number_format($this->final, 2, '.', ''); }
+    /**
+     * Get modality by modality unique id.
+     *
+     * @param string $modality
+     * @since 2.0.0
+     * @return DueAmountModality|null
+     */
+    public function getModality(string $modality): ?DueAmountModality
+    {
+        return $this->modalities[$modality] ?? null;
+    }
 
-		if ( !empty($this->modalities) )
-		{
-			foreach ( $this->modalities as $modality )
-			{ $array[$modality->getModality()] = $modality->export(); }
-		}
+    /**
+     * Get all modalities associated to pix transaction.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    public function getModalities(): array
+    {
+        return $this->modalities;
+    }
 
-		return $array;
-	}
+    /**
+     * Get the value of changeModality
+     */
+    public function getChangeModality(): ?bool
+    {
+        return $this->changeModality;
+    }
 
-	/**
-	 * Import data to array.
-	 * 
-	 * @param array $data
-	 * @since 2.0.0
-	 * @return self
-	 */
-	public function import ( array $data )
-	{
-		$importable = [
-			'original' => 'setOriginal',
-			'final' => 'setFinal'
-		];
+    /**
+     * Set the value of changeModality
+     */
+    public function setChangeModality($changeModality): self
+    {
+        $this->changeModality = $changeModality;
 
-		foreach ( $importable as $field => $method )
-		{
-			if ( isset($data[$field]) )
-			{ $this->{$method}($data[$field]); }
-		}
+        return $this;
+    }
 
-		foreach ( DueAmountModality::MODALITIES as $modality )
-		{
-			if ( isset($data[$modality]) )
-			{ $this->addModality((new DueAmountModality($modality))->import($data[$modality])); }
-		}
+    /**
+     * Export this object to an array.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    public function export(): array
+    {
+        $array = [
+            'original' => \number_format($this->original, 2, '.', '')
+        ];
 
-		return $this;
-	}
+        if (!empty($this->final)) {
+            $array['final'] = \number_format($this->final, 2, '.', '');
+        }
+
+        if (isset($this->changeModality)) {
+            $array['modalidadeAlteracao'] = $this->changeModality;
+        }
+
+        if (!empty($this->modalities)) {
+            foreach ($this->modalities as $modality) {
+                $array[$modality->getModality()] = $modality->export();
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * Import data to array.
+     *
+     * @param array $data
+     * @since 2.0.0
+     * @return self
+     */
+    public function import(array $data)
+    {
+        $importable = [
+            'original' => 'setOriginal',
+            'final' => 'setFinal',
+            'modalidadeAlteracao' => 'setChangeModality'
+        ];
+
+        foreach ($importable as $field => $method) {
+            if (isset($data[$field])) {
+                $this->{$method}($data[$field]);
+            }
+        }
+
+        foreach (DueAmountModality::MODALITIES as $modality) {
+            if (isset($data[$modality])) {
+                $this->addModality((new DueAmountModality($modality))->import($data[$modality]));
+            }
+        }
+
+        return $this;
+    }
 }
