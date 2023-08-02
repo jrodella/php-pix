@@ -34,6 +34,14 @@ class Amount
     protected $final;
 
     /**
+     * Change modality.
+     *
+     * @since 2.0.0
+     * @var bool
+     */
+    protected $changeModality;
+
+    /**
      * Modalities to amount.
      *
      * @since 2.0.0
@@ -126,6 +134,24 @@ class Amount
     }
 
     /**
+     * Get the value of changeModality
+     */
+    public function getChangeModality(): ?bool
+    {
+        return $this->changeModality;
+    }
+
+    /**
+     * Set the value of changeModality
+     */
+    public function setChangeModality($changeModality): self
+    {
+        $this->changeModality = $changeModality;
+
+        return $this;
+    }
+
+    /**
      * Export this object to an array.
      *
      * @since 2.0.0
@@ -139,6 +165,10 @@ class Amount
 
         if (!empty($this->final)) {
             $array['final'] = \number_format($this->final, 2, '.', '');
+        }
+
+        if (isset($this->changeModality)) {
+            $array['modalidadeAlteracao'] = $this->changeModality;
         }
 
         if (!empty($this->modalities)) {
@@ -161,7 +191,8 @@ class Amount
     {
         $importable = [
             'original' => 'setOriginal',
-            'final' => 'setFinal'
+            'final' => 'setFinal',
+            'modalidadeAlteracao' => 'setChangeModality'
         ];
 
         foreach ($importable as $field => $method) {

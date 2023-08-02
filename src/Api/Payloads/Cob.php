@@ -91,7 +91,7 @@ class Cob
      * @var string
      * @since 2.0.0
      */
-    public const TYPE_IMMEDIATE = 'COB_IMMEDIATE';
+    public const TYPE_IMMEDIATE = 'cob';
 
     /**
      * Cob type as "COB_DUE".
@@ -99,7 +99,7 @@ class Cob
      * @var string
      * @since 2.0.0
      */
-    public const TYPE_DUE = 'COB_DUE';
+    public const TYPE_DUE = 'cobv';
 
     /**
      * All cob types available.
@@ -157,7 +157,7 @@ class Cob
      * @since 2.0.0
      * @var Pix
      */
-    protected $pix;
+    protected $pix = [];
 
     /**
      * Pix key.
@@ -280,7 +280,7 @@ class Cob
      */
     public function setPix(Pix $pix)
     {
-        $this->pix = $pix;
+        $this->pix[] = $pix;
         return $this;
     }
 
@@ -417,9 +417,9 @@ class Cob
      * Get pix to current cob.
      *
      * @since 2.0.0
-     * @return Pix|null
+     * @return Pix|array|null
      */
-    public function getPix(): ?Pix
+    public function getPix(): mixed
     {
         return $this->pix;
     }
@@ -551,8 +551,16 @@ class Cob
             $array['loc'] = $this->location->export();
         }
 
-        if (isset($this->pix)) {
-            $array['pix'] = $this->pix->export();
+        if (!empty($this->pix)) {
+            if (count($this->pix) === 1) {
+                $pix = array_shift($this->pix);
+                $array['pix'] = $pix->export();
+            } else {
+                $array['pix'] = [];    
+                foreach ($this->pix as $pix) {
+                    $array['pix'][] = $pix->export();
+                }
+            }
         }
 
         return $array;
@@ -614,7 +622,13 @@ class Cob
         }
 
         if (isset($response['pix'])) {
-            $this->setPix((new Pix())->import($response['pix']));
+            if (!isset($response['pix'][0])) {
+                $this->setPix((new Pix())->import($response['pix']));
+            } else {
+                foreach ($response['pix'] as $pix) {
+                    $this->setPix((new Pix())->import($pix));
+                }
+            }
         }
 
         return $this;

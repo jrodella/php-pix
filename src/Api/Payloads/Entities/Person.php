@@ -176,11 +176,11 @@ class Person
         $parsed = Parser::parseDocument($document);
 
         if (Parser::validateCpf($parsed)) {
-            $this->document = $document;
+            $this->document = $parsed;
             $this->documentType = 'cpf';
             return $this;
         } elseif (Parser::validateCnpj($parsed)) {
-            $this->document = $document;
+            $this->document = $parsed;
             $this->documentType = 'cnpj';
             return $this;
         }
