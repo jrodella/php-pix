@@ -205,6 +205,14 @@ class Cob
     protected $status;
 
     /**
+     * Pix Copia e Cola.
+     *
+     * @since 2.0.0
+     * @var string
+     */
+    protected $pixCopiaECola;
+
+    /**
      * Set the cob receiver.
      * Will change $person type to Person::TYPE_RECEIVER.
      *
@@ -359,6 +367,19 @@ class Cob
     }
 
     /**
+     * Set the pix copia e cola.
+     *
+     * @param string $requestToDebtor
+     * @since 2.0.0
+     * @return self
+     */
+    public function setPixCopiaECola(string $pixCopiaECola)
+    {
+        $this->pixCopiaECola = $pixCopiaECola;
+        return $this;
+    }
+    
+    /**
      * Get receiver to current cob.
      *
      * @since 2.0.0
@@ -491,6 +512,17 @@ class Cob
     }
 
     /**
+     * Get pix copia e cola of current cob.
+     *
+     * @since 2.0.0
+     * @return string|null
+     */
+    public function getPixCopiaECola(): ?string
+    {
+        return $this->pixCopiaECola;
+    }
+
+    /**
      * Export this object to an array.
      *
      * @since 2.0.0
@@ -563,6 +595,10 @@ class Cob
             }
         }
 
+        if (isset($this->pixCopiaECola)) {
+            $array['pixCopiaECola'] = $this->pixCopiaECola;
+        }
+        
         return $array;
     }
 
@@ -629,6 +665,10 @@ class Cob
                     $this->setPix((new Pix())->import($pix));
                 }
             }
+        }
+
+        if (isset($response['pixCopiaECola'])) {
+            $this->setPixCopiaECola($response['pixCopiaECola']);
         }
 
         return $this;
