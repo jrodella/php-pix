@@ -368,7 +368,7 @@ class DueAmountModality
         ];
 
         if (!empty($this->amount)) {
-            $array['valorPerc'] = $this->amount;
+            $array['valorPerc'] = number_format($this->amount, 2, '.', '');
         }
 
         return \array_merge($array, $this->extra);
