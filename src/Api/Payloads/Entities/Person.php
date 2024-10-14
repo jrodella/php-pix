@@ -476,7 +476,7 @@ class Person
         }
 
         if (isset($this->zipCode)) {
-            $array['zipCode'] = $this->zipCode;
+            $array['zipCode'] = preg_replace("/[^0-9]/", "", $this->zipCode);
         }
 
         if (isset($this->email)) {
