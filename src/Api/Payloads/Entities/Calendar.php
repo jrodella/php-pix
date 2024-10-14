@@ -213,6 +213,39 @@ class Calendar
     }
 
     /**
+     * Export this object to an array.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    public function bankingExport(): array
+    {
+        $array = [];
+
+        if (isset($this->createdAt)) {
+            $array['createdAt'] = $this->createdAt->format(DateTime::RFC3339);
+        }
+
+        if (isset($this->presentedAt)) {
+            $array['presentedAt'] = $this->presentedAt->format(DateTime::RFC3339);
+        }
+
+        if (isset($this->expiresIn)) {
+            $array['expirationInSeconds'] = $this->expiresIn;
+        }
+
+        if (isset($this->dueDate)) {
+            $array['dueDate'] = $this->dueDate->format('Y-m-d');
+        }
+
+        if (isset($this->expirationAfter)) {
+            $array['expirationDays'] = $this->expirationAfter;
+        }
+
+        return $array;
+    }
+
+    /**
      * Import data to array.
      *
      * @param string $type Person type
@@ -228,6 +261,33 @@ class Calendar
             'expiracao' => 'setExpiresIn',
             'dataDeVencimento' => 'setDueDate',
             'validadeAposVencimento' => 'setExpirationAfter'
+        ];
+
+        foreach ($importable as $field => $method) {
+            if (isset($data[$field])) {
+                $this->{$method}($data[$field]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Import data to array.
+     *
+     * @param string $type Person type
+     * @param array $data
+     * @since 2.0.0
+     * @return self
+     */
+    public function bankingImport(array $data)
+    {
+        $importable = [
+            'createdAt' => 'setCreatedAt',
+            'presentedAt' => 'setPresentedAt',
+            'expirationInSeconds' => 'setExpiresIn',
+            'dueDate' => 'setDueDate',
+            'expirationDays' => 'setExpirationAfter'
         ];
 
         foreach ($importable as $field => $method) {

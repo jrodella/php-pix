@@ -603,6 +603,90 @@ class Cob
     }
 
     /**
+     * Export this object to an array.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    public function bankingExport(): array
+    {
+        $array = [];
+
+        if (isset($this->calendar)) {
+            $array['calendar'] = $this->calendar->bankingExport();
+        }
+
+        if (isset($this->receiver)) {
+            $array[$this->receiver->getType()] = $this->receiver->bankingExport();
+        }
+
+        if (isset($this->debtor)) {
+            if ($this->debtor->getType() == Person::TYPE_DEBTOR) {
+                $array['debtor'] = $this->debtor->bankingExport();
+            } else {
+                $array['receiver'] = $this->debtor->bankingExport();
+            }
+        }
+
+        if (isset($this->amount)) {
+            $array['value'] = $this->amount->export();
+        }
+
+        if (isset($this->pixKey)) {
+            $array['dictKey'] = $this->pixKey;
+        }
+
+        if (isset($this->requestToDebtor)) {
+            $array['message'] = $this->requestToDebtor;
+        }
+
+        if (isset($this->revision)) {
+            $array['revisionNumber'] = $this->revision;
+        }
+
+        if (!empty($this->extra)) {
+            $array['additionalInfos'] = [];
+
+            foreach ($this->extra as $name => $value) {
+                $array['additionalInfos'][] = [
+                    'name' => $name,
+                    'value' => $value
+                ];
+            }
+        }
+
+        if (isset($this->tid)) {
+            $array['txid'] = $this->tid;
+        }
+
+        if (isset($this->status)) {
+            $array['status'] = $this->status;
+        }
+
+        if (isset($this->location)) {
+            $array['loc'] = $this->location->export();
+        }
+
+        if (!empty($this->pix)) {
+            if (count($this->pix) === 1) {
+                $pix = array_shift($this->pix);
+                $array['pix'] = $pix->export();
+            } else {
+                $array['pix'] = [];    
+                foreach ($this->pix as $pix) {
+                    $array['pix'][] = $pix->export();
+                }
+            }
+        }
+
+        if (isset($this->pixCopiaECola)) {
+            $array['qrCode']['emv'] = $this->pixCopiaECola;
+        }
+        
+        return $array;
+    }
+
+    /**
      * Import data from array.
      *
      * @param array $response
@@ -669,6 +753,78 @@ class Cob
 
         if (isset($response['pixCopiaECola'])) {
             $this->setPixCopiaECola($response['pixCopiaECola']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Import data from array.
+     *
+     * @param array $response
+     * @since 2.0.0
+     * @return self
+     */
+    public function bankingImport(array $response)
+    {
+        if (isset($response['txid'])) {
+            $this->setTid($response['txid']);
+        }
+
+        if (isset($response['revisionNumber'])) {
+            $this->setRevision(intval($response['revisionNumber']));
+        }
+
+        if (isset($response['message'])) {
+            $this->setRequestToDebtor($response['message']);
+        }
+
+        if (isset($response['dictKey'])) {
+            $this->setPixKey($response['dictKey']);
+        }
+
+        if (isset($response['status'])) {
+            $this->setStatus($response['status']);
+        }
+
+        if (isset($response['additionalInfos'])) {
+            foreach ($response['additionalInfos'] as $info) {
+                $this->addExtra($info['name'], $info['value']);
+            }
+        }
+
+        if (isset($response['calendar'])) {
+            $this->setCalendar((new Calendar())->bankingImport($response['calendar']));
+        }
+
+        if (isset($response['loc'])) {
+            $this->setLocation((new Location())->import($response['loc']));
+        }
+
+        if (isset($response['debtor'])) {
+            $this->setDebtor((new Person(Person::TYPE_DEBTOR))->bankingImport($response['debtor']));
+        }
+
+        if (isset($response['receiver'])) {
+            $this->setReceiver((new Person(Person::TYPE_RECEIVER))->bankingImport($response['receiver']));
+        }
+
+        if (isset($response['value'])) {
+            $this->setAmount((new Amount())->import($response['value']));
+        }
+
+        if (isset($response['pix'])) {
+            if (!isset($response['pix'][0])) {
+                $this->setPix((new Pix())->import($response['pix']));
+            } else {
+                foreach ($response['pix'] as $pix) {
+                    $this->setPix((new Pix())->import($pix));
+                }
+            }
+        }
+
+        if (isset($response['qrCode']['emv'])) {
+            $this->setPixCopiaECola($response['qrCode']['emv']);
         }
 
         return $this;

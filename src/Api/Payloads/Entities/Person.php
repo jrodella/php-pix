@@ -442,6 +442,51 @@ class Person
     }
 
     /**
+     * Export this object to an array.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    public function bankingExport(): array
+    {
+        $array = [];
+
+        if (isset($this->document)) {
+            $array[$this->documentType] = $this->document;
+        }
+
+        if (isset($this->name)) {
+            $array['name'] = $this->name;
+        }
+
+        if (isset($this->fantasyName)) {
+            $array['fantasyName'] = $this->fantasyName;
+        }
+
+        if (isset($this->city)) {
+            $array['city'] = $this->city;
+        }
+
+        if (isset($this->state)) {
+            $array['state'] = $this->state;
+        }
+
+        if (isset($this->streetAddress)) {
+            $array['address'] = $this->streetAddress;
+        }
+
+        if (isset($this->zipCode)) {
+            $array['zipCode'] = $this->zipCode;
+        }
+
+        if (isset($this->email)) {
+            $array['email'] = $this->email;
+        }
+
+        return $array;
+    }
+
+    /**
      * Import data to array.
      *
      * @param string $type Person type
@@ -460,6 +505,37 @@ class Person
             'cidade' => 'setCity',
             'cep' => 'setZipCode',
             'uf' => 'setState',
+            'email' => 'setEmail'
+        ];
+
+        foreach ($importable as $field => $method) {
+            if (isset($data[$field])) {
+                $this->{$method}($data[$field]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Import data to array.
+     *
+     * @param string $type Person type
+     * @param array $data
+     * @since 2.0.0
+     * @return self
+     */
+    public function bankingImport(array $data)
+    {
+        $importable = [
+            'name' => 'setName',
+            'fantasyName' => 'setFantasyName',
+            'cpf' => 'setDocument',
+            'cnpj' => 'setDocument',
+            'address' => 'setStreetAddress',
+            'city' => 'setCity',
+            'zipCode' => 'setZipCode',
+            'state' => 'setState',
             'email' => 'setEmail'
         ];
 
