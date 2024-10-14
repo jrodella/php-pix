@@ -338,7 +338,7 @@ class Person
             throw new InvalidFieldException('Pessoa.CEP', $zipcode, 'O CEP está inválido.');
         }
 
-        $this->zipcode = \substr($_zipcode, 0, 5) . '-' . \substr($_zipcode, 5, 3);
+        $this->zipCode = \substr($_zipcode, 0, 5) . '-' . \substr($_zipcode, 5, 3);
         return $this;
     }
 
