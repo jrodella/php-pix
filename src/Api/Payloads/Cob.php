@@ -356,6 +356,7 @@ class Cob
      */
     public function setStatus(string $status)
     {
+        $status = static::parseStatus($status);
         try {
             static::validateStatus($status);
         } catch (Exception $e) {
@@ -843,6 +844,25 @@ class Cob
         if (\in_array($status, static::STATUSES, true) === false) {
             throw new RuntimeException(\sprintf('O status deve ser um dos seguintes: `%s`.', \implode('`, `', static::STATUSES)));
         }
+    }
+
+    /**
+     * Parse status from english to portuguese.
+     *
+     * @param string $status
+     * @since 2.0.0
+     * @return string
+     */
+    public static function parseStatus(string $status)
+    {
+        $statuses = [
+            'UNSET' => self::STATUS_UNSET,
+            'ACTIVE' => self::STATUS_ACTIVE,
+            'COMPLETED' => self::STATUS_FINISHED,
+            'REMOVED_BY_RECEIVER_USER' => self::STATUS_REMOVED_BY_RECEPTOR,
+            'REMOVED_BY_PSP' => self::STATUS_REMOVED_BY_PSP,
+        ];
+        return $statuses[$status] ?? $status;
     }
 
     /**
