@@ -73,4 +73,16 @@ trait UseExtra
         unset($this->extra[$name]);
         return $this;
     }
+
+    /**
+     * Get all payload extra fields.
+     *
+     * @param string $name
+     * @since 2.0.0
+     * @return mixed
+     */
+    public function getAllExtra()
+    {
+        return $this->extra;
+    }
 }
