@@ -84,6 +84,17 @@ class Field extends AbstractField
     }
 
     /**
+     * Get field value.
+     *
+     * @since 2.0.0
+     * @return string
+     */
+    public function getValueWithoutDefault(): ?string
+    {
+        return $this->value ?? null;
+    }
+
+    /**
      * Set field value.
 
      * Will auto cut string if length

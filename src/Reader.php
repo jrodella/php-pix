@@ -161,7 +161,7 @@ class Reader
             $this->extractor($pixCode, $mpm);
         }
 
-        $poi = $mpm->getEmv('01')->getValue();
+        $poi = $mpm->getEmv('01')->getValueWithoutDefault();
 
         if ($poi == 11) {
             return (new StaticPayload())->changeMpm($mpm);
